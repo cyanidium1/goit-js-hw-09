@@ -1,0 +1,13 @@
+#datetime-picker {
+    font-size: 24px;
+}
+button {
+    border-radius: 40px;
+    width: 300px;
+    font-size: 24px;
+}
+.timer {
+    display: flex;
+    font-size: 24px;
+}
+.field {margin: 23px;}
