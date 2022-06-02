@@ -1,34 +1,35 @@
+import Notiflix from "../../node_modules/notiflix";
+const form = document.querySelector('.form');
+function kek(ev) {
+  ev.preventDefault();
+  let el = ev.currentTarget.elements;
 
-const form = document.querySelector('.form')
-function kek(event){
-  event.preventDefault();
-  let el = event.currentTarget.elements;
-  let am = Number(el.amount.value);
-  let fD = Number(el.delay.value);
-  let dS = Number(el.step.value);
-  let i = 0;
-    setTimeout(() => {
-      let fDbase = fD;
-        const id = setInterval(() => {
-            if (i > am - 2) {
-                clearInterval(id)
-            }
-            const promise = new Promise((resolve, reject) => {
-                const mark = Math.random() > 0.3;
-                if (mark) {
-                resolve(mark);
-                }
-                reject(mark);
-            });
-            promise
-                .then(result => console.log(`✅ Fulfilled promise ${i} in ${fDbase}ms`))
-                .catch(result => console.log(`❌ Rejected promise ${i} in ${fDbase}ms`));
-            fDbase += dS;
-            i+=1;
-        }, dS);
-    }, fD);
+  let amount = Number(el.amount.value);
+  let delay = Number(el.delay.value);
+  let step = Number(el.step.value);
 
+  for (let i = 1; i <= amount; i += 1) {
+    createPromise(i, delay)
+      .then(({ i, delay }) => {
+        Notiflix.Notify.success(`✅ Fulfilled promise ${i} in ${delay}ms`);
+      })
+      .catch(({ i, delay }) => {
+        Notiflix.Notify.failure(`❌ Rejected promise ${i} in ${delay}ms`);
+      });
+    delay += step;
+  }
 }
-
+function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
+  return new Promise((resolve, reject) => {
+    setInterval(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
+}
 
 form.addEventListener('submit', kek)
